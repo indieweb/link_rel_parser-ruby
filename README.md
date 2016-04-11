@@ -53,6 +53,17 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/indieweb/link_rel_parser-ruby/issues. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
+1. Fork it
+2. Get it running (see Installation above)
+3. Create your feature branch (`git checkout -b my-new-feature`)
+4. Write your code and **specs**
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create new Pull Request
+
+If you find bugs, have feature requests or questions, please
+[file an issue](https://github.com/indieweb/link_rel_parser-ruby/issues).
+
 
 ## Code of Conduct
 
