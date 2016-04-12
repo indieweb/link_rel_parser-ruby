@@ -24,7 +24,7 @@ module LinkRelParser
     # Examples
     #
     #   http_rels(headers)
-    #   # => { "x-pingback" => "http://www.example.com/xmlrpc.php" }
+    #   # => { "X-Pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
     #
     # Returns an array of key/value pairs of LINK name and REL value or an empty array
     def http_rels(headers, base_url: nil)
