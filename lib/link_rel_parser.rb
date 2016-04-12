@@ -9,13 +9,24 @@ module LinkRelParser
       response = {
         status: "http_code",
         type: "content_type",
-        rels: rels(headers, base_url: base_url)
+        rels: http_rels(headers, base_url: base_url)
       }
       
       response[:rels].blank? ? {} : response
     end
-    
-    def rels(headers, base_url: nil)
+
+    # Internal: Parse out the HTTP LINK headers with a REL value.
+    #
+    # headers  - string to HTTP headers.
+    # base_url - optional base URL to resolve relative URLs (default: nil).
+    #
+    # Examples
+    #
+    #   http_rels(headers)
+    #   # => 'TomTomTomTom'
+    #
+    # Returns an array of key/value pairs of LINK name and REL value or an empty array
+    def http_rels(headers, base_url: nil)
       links_rels = [headers]
 
       links_rels
