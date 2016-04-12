@@ -5,11 +5,27 @@ require "active_support/core_ext/object/blank"
 module LinkRelParser
   class << self
 
+    # Public: Parse out headers: HTTP status code, content type, and LINKs with a REL value.
+    #
+    # headers  - string to HTTP headers.
+    # base_url - optional base URL to resolve relative URLs (default: nil).
+    #
+    # Examples
+    #
+    #   LinkRelParser.parse(headers)
+    #   # =>
+    #     {
+    #       status: "200",
+    #       type:   "text/HTML",
+    #       rels:   { "X-Pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
+    #     }
+    #
+    # Returns an array of key/value pairs of LINK name and REL value or an empty array
     def parse(headers, base_url: nil)
       # TODO
       response = {
-        status: "http_code",
-        type:   "content_type",
+        status: "200",
+        type:   "text/HTML",
         rels:   http_rels(headers, base_url: base_url)
       }
 
@@ -26,9 +42,9 @@ module LinkRelParser
     #   http_rels(headers)
     #   # => { "X-Pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
     #
-    # Returns an array of key/value pairs of LINK name and REL value or an empty array
+    # Returns a hash of LINK name and REL value or an empty {}
     def http_rels(headers, base_url: nil)
-      return [] if headers.blank?
+      return {} if headers.blank?
 
       # clean up and normal headers
       headers = headers.strip.gsub(/\r\n|\r/, "\n").
