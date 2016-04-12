@@ -19,10 +19,14 @@ describe LinkRelParser do
       expect(response[:rels]).to_not   be nil
     end
 
-    it "needs more .parse specs"
+    # it "needs more .parse specs"
   end
 
   describe ".http_rels" do
+    it "returns an empty hash when there are no rel links" do
+      expect(LinkRelParser.http_rels(nil)).to be {}
+    end
+
     it "parses simple example" do
       headers   = %q{Link: <http://example.org/query?a=b,c>; rel="d e", <http://example.org/>; rel=f}
       link_rels = {
