@@ -11,9 +11,12 @@ describe LinkRelParser do
     end
 
     it "returns a hash with status, type, rels keys when rel links are found" do
-      expect(LinkRelParser.parse(nil)[:status]).to_not be nil
-      expect(LinkRelParser.parse(nil)[:type]).to_not be nil
-      expect(LinkRelParser.parse(nil)[:rels]).to_not be nil
+      headers  = %q{Link: <http://example.org/>; rel="foo"; title="Example"}
+      response = LinkRelParser.parse(headers)
+
+      expect(response[:status]).to_not be nil
+      expect(response[:type]).to_not   be nil
+      expect(response[:rels]).to_not   be nil
     end
   end
 
