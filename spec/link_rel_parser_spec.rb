@@ -19,7 +19,7 @@ describe LinkRelParser do
       expect(response[:rels]).to_not   be nil
     end
 
-    it "needs more .parse spece"
+    it "needs more .parse specs"
   end
 
   describe ".http_rels" do
