@@ -5,9 +5,9 @@ Parse HTTP `Link` headers into a structured format
 
 ## Version
 
-0.1.0
+0.1.1
 
-![Version 0.1.0](https://img.shields.io/badge/VERSION-0.1.0-green.svg)
+![Version 0.1.1](https://img.shields.io/badge/VERSION-0.1.1-green.svg)
 
 
 ## Code Status
@@ -54,12 +54,6 @@ LinkRelParser.parse("https://aaronparecki.com")
 
 
 ## Development
-
-```bash
-git clone git@github.com:indieweb/link_rel_parser-ruby.git
-cd link_rel_parser-ruby
-bin/setup
-```
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment. Run `bundle exec link_rel_parser` to use the gem in this directory, ignoring other installed copies of this gem.
 
