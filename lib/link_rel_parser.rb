@@ -1,35 +1,43 @@
-require "link_rel_parser/version"
 require "active_support"
 require "active_support/core_ext/object/blank"
+require "link_rel_parser/version"
+require "metainspector"
+require "uri"
 
 module LinkRelParser
   class << self
 
-    # Public: Parse out headers: HTTP status code, content type, and LINKs with a REL value.
+    # Public: Parse out LINK headers with a REL value.
     #
-    # headers  - string to HTTP headers.
-    # base_url - optional base URL to resolve relative URLs (default: nil).
+    # url - URL to get HTTP HEAD Link (and effective/x-extended) rels.
     #
     # Examples
     #
-    #   LinkRelParser.parse(headers)
+    #   LinkRelParser.parse("http://example.com")
     #   # =>
     #     {
     #       status: "200",
     #       type:   "text/HTML",
-    #       rels:   { "X-Pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
+    #       rels:   { "pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
     #     }
     #
-    # Returns an array of key/value pairs of LINK name and REL value or an empty array
-    def parse(headers, base_url: nil)
-      # TODO
-      response = {
-        status: "200",
-        type:   "text/HTML",
-        rels:   http_rels(headers, base_url: base_url)
+    # Returns a hash of HTTP status code, content type, and LINKs with a REL value or an empty {}
+    def parse(url)
+      page         = MetaInspector.new(url)
+      header_links = page.response.headers[:link]
+
+      # Convert X-Pingback to a Link header and have common code handle it
+      unless page.response.headers["x-pingback"].nil?
+        header_links << %Q{, <#{header_links['x-pingback']}>; rel="pingback"}
+      end
+
+      output = {
+        status: page.response.status,
+        type:   page.response["content-type"],
+        rels:   link_rels(header_links)
       }
 
-      response[:rels].blank? ? {} : response
+      output[:rels].blank? ? {} : output
     end
 
     # Internal: Parse out the HTTP LINK headers with a REL value.
@@ -39,68 +47,37 @@ module LinkRelParser
     #
     # Examples
     #
-    #   http_rels(headers)
-    #   # => { "X-Pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
+    #   link_rels(headers)
+    #   # => { "pingback" => "http://www.example.com/xmlrpc.php", "indieauth" => "https://indieauth.com" }
     #
     # Returns a hash of LINK name and REL value or an empty {}
-    def http_rels(headers, base_url: nil)
-      return {} if headers.blank?
+    def link_rels(headers, base_url: nil)
+      links = {}
 
-      # clean up and normal headers
-      headers = headers.strip.gsub(/\r\n|\r/, "\n").
-                              gsub(/\t+/, " ").
-                              gsub(/^\s+/, "").
-                              split("\n")
+      unless headers.nil?
+        headers.split(", ").each do |link, index|
+          section = link.split(';')
+          url     = section[0][/<(.*)>/,1]
 
-      links_rels = {}
-      headers.each do |header|
-        header.sub!(/Link: /i, "Link: ")
+          # ignore link headers without rel
+          if section[1] =~ /rel=/
+            rel = section[1][/rel="*(.*)"*/,1].gsub(/"$/, "")
+            rel.split.each do |name|
 
-        if header =~ /X-Pingback:/
-          # convert to a Link header and have common code handle it
-          header = %Q{Link: <#{ header.split('X-Pingback: ').last }>; rel="pingback"}
-        end
-
-        if header =~ /Link:/
-          links = header.split("Link: ").last.strip.split(", ")
-          links.each do |link|
-            href_and_rel = link.split("; ")
-            href = href_and_rel.first.gsub(/<|>/, "")
-
-            rels = []
-            href_and_rel.each do |rel_value|
-              if rel_value =~ /rel=/
-                rels = rel_value.gsub(/"|'/, "").split("rel=").last.strip.split
+              unless base_url.blank?
+                uri      = URI.parse(base_url)
+                path     = url.gsub(%r{^/*}, "")
+                uri.path = "/" + path
+                url      = uri.normalize
               end
+
+              links[name] = url
             end
-
-            # ignore Link: headers without rel
-            unless rels.blank?
-              rels.each do |rel|
-                unless rel.blank?
-                  rel = rel.downcase.strip
-
-                  if links_rels[rel].blank?
-                    links_rels[rel] = ""
-                  end
-
-                  unless base_url.blank?
-                    href = base_url + href # TODO use standard library for this
-                  end
-
-                  # TODO is this necessary?
-                  unless links_rels[rel].include?(href)
-                    links_rels[rel] << href
-                  end
-                end
-              end
-            end
-
           end
         end
       end
 
-      links_rels
+      links
     end
 
   end
