@@ -40,8 +40,8 @@ gem install link_rel_parser
 ## Usage
 
 ```ruby
-require "LinkRelParser"
-LinkRelParser("https://aaronparecki.com")
+require "link_rel_parser"
+LinkRelParser.parse("https://aaronparecki.com")
 
 {
   "authorization_endpoint" => "https://aaronparecki.com/auth",
