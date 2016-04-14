@@ -48,7 +48,7 @@ LinkRelParser.parse("https://aaronparecki.com")
   "hub"                    => "https://switchboard.p3k.io/",
   "micropub"               => "https://aaronparecki.com/micropub",
   "self"                   => "https://aaronparecki.com/",
-  "token_endpoint"         => "https://aaronparecki.com/auth/token",
+  "token_endpoint"         => "https://aaronparecki.com/auth/token"
 }
 ```
 
