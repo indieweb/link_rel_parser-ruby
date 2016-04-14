@@ -39,7 +39,18 @@ gem install link_rel_parser
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "LinkRelParser"
+LinkRelParser("https://aaronparecki.com")
+
+{
+  "authorization_endpoint" => "https://aaronparecki.com/auth",
+  "hub"                    => "https://switchboard.p3k.io/",
+  "micropub"               => "https://aaronparecki.com/micropub",
+  "self"                   => "https://aaronparecki.com/",
+  "token_endpoint"         => "https://aaronparecki.com/auth/token",
+}
+```
 
 
 ## Development
