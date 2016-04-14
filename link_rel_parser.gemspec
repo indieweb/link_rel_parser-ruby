@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Shane Becker"]
   spec.email         = ["veganstraightedge@gmail.com"]
 
-  spec.summary       = %q{Parse HTTP `Link` headers into a structured format}
-  spec.description   = %q{Ruby port of https://github.com/indieweb/link-rel-parser-php}
-  spec.homepage      = "https://github.com/indieweb/link-rel-parser-ruby"
+  spec.summary       = %q{Ruby port of https://github.com/indieweb/link-rel-parser-php}
+  spec.description   = %q{Parse HTTP `Link` headers into a structured format}
+  spec.homepage      = "https://github.com/indieweb/link_rel_parser-ruby"
   spec.license       = "CC0"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
